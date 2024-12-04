@@ -1,65 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_check_possibility.c                             :+:      :+:    :+:   */
+/*   ft_check_possibility2.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: crmorale <crmorale@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 18:36:26 by crmorale          #+#    #+#             */
-/*   Updated: 2024/11/28 19:48:03 by crmorale         ###   ########.fr       */
+/*   Created: 2024/11/28 19:16:42 by crmorale          #+#    #+#             */
+/*   Updated: 2024/11/28 19:17:17 by crmorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	ft_malloc_and_copy_map(t_game *game, char ***map_copy)
+void	ft_free_double(char **ptr)
 {
 	int	i;
 
-	*map_copy = malloc(sizeof(char *) * (game->height + 1));
-	if (!*map_copy)
+	i = 0;
+	while (ptr[i])
 	{
-		ft_free_map_checker(*map_copy, game->height);
-		write(2, "Error: malloc failed for rows.\n", 31);
-		exit(EXIT_FAILURE);
+		free (ptr[i]);
+		i++;
 	}
-	i = -1;
-	while (++i < game->height)
-	{
-		(*map_copy)[i] = malloc(sizeof(char) * (game->width + 1));
-		if (!(*map_copy)[i])
-		{
-			write(2, "Error: malloc failed for columns.\n", 34);
-			while (--i >= 0)
-				free((*map_copy)[i]);
-			free(*map_copy);
-			exit(EXIT_FAILURE);
-		}
-	}
-	ft_copy_map(game, map_copy);
+	free(ptr);
 }
 
-void	ft_copy_map(t_game *game, char ***map_copy)
+void	ft_malloc_and_copy_map(t_game *game, char ***map_copy)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		fd;
+	char	*tmp;
 
-	i = -1;
-	while (++i < game->height)
+	fd = open(game->txt, O_RDONLY);
+	tmp = get_next_line(fd);
+	*map_copy = malloc(sizeof(char *) * (game->height + 1));
+	if (!(*map_copy))
+		return ;
+	i = 0;
+	while (tmp != NULL)
 	{
-		j = -1;
-		while (++j < game->width)
-			(*map_copy)[i][j] = game->map[i][j];
-		(*map_copy)[i][j] = '\0';
+		(*map_copy)[i] = tmp;
+		tmp = get_next_line(fd);
+		if (!tmp)
+			ft_free_double(*map_copy);
+		i++;
 	}
-	(*map_copy)[i] = NULL;
 }
 
 void	ft_iter_checker(char **map_copy, t_game *game, int i, int j)
 {
 	if (i < 0 || i >= game->height || j < 0 || j >= game->width)
 	{
-		ft_free_map_checker(map_copy, game->height);
 		write(2, "Error: wrong map size game variables.\n", 38);
 		exit(EXIT_FAILURE);
 	}
@@ -86,8 +77,8 @@ void	ft_check_achievable_map(char **map_copy, t_game *game)
 		{
 			if (map_copy[i][j] != '1' && map_copy[i][j] != '0')
 			{
-				ft_free_map_checker(map_copy, game->height);
 				write(2, "Error: impossible map.\n", 23);
+				ft_free_map_and_texts(game);
 				exit(EXIT_FAILURE);
 			}
 		}

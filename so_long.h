@@ -6,7 +6,7 @@
 /*   By: crmorale <crmorale@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:23:13 by crmorale          #+#    #+#             */
-/*   Updated: 2024/11/27 21:29:27 by crmorale         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:41:46 by crmorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,10 @@ void	ft_check_map_outline(t_game *game);
 void	ft_check_map_format(t_game *game);
 void	ft_check_map_imputs(t_game *game);
 void	ft_check_map_objects(t_game *game);
+void	ft_free_map_error(t_game *game, char *msg);
 
 	/*- - -  ft_check_possibility  - - -*/
+void	ft_copy_map(t_game *game, char ***map_copy);
 void	ft_print_map(char **map);
 void	ft_malloc_and_copy_map(t_game *game, char ***map_copy);
 void	ft_copy_map(t_game *game, char ***map_copy);

@@ -6,7 +6,7 @@
 /*   By: crmorale <crmorale@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 13:10:32 by crmorale          #+#    #+#             */
-/*   Updated: 2024/11/27 21:28:34 by crmorale         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:55:00 by crmorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void	ft_check_map_outline(t_game *game)
 	if (err != 0)
 	{
 		write(2, "Error: wrong map outline.\n", 26);
-		exit (EXIT_FAILURE);
+		ft_free_map_and_texts(game);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -44,10 +45,15 @@ void	ft_check_map_format(t_game *game)
 	if (ft_strlen(game->txt) > 4)
 	{
 		if (ft_strcmp(&game->txt[ft_strlen(game->txt) - 4], ".ber") == 0)
-			return ;
+		{
+			if (game->txt[ft_strlen(game->txt) - 5] != '\0')
+				return ;
+		}
 	}
+	ft_free_map_error(game, "Error: wrong map format or bad extension.\n");
 	write(2, "Error: wrong map format or bad extension.\n", 42);
-	exit (EXIT_FAILURE);
+	ft_free_map_and_texts(game);
+	exit(EXIT_FAILURE);
 }
 
 void	ft_check_map_imputs(t_game *game)
@@ -64,10 +70,7 @@ void	ft_check_map_imputs(t_game *game)
 			if (game->map[i][j] != '1' && game->map[i][j] != '0'
 				&& game->map[i][j] != 'C' && game->map[i][j] != 'E'
 				&& game->map[i][j] != 'P')
-			{
-				write(2, "Error: wrong imputs in the map.\n", 32);
-				exit (EXIT_FAILURE);
-			}
+				ft_free_map_error(game, "Error: wrong imputs in the map.\n");
 			else
 				j++;
 		}
@@ -99,10 +102,7 @@ void	ft_check_map_objects(t_game *game)
 		}
 	}
 	if (game->player != 1 || game->collect < 1 || game-> end != 1)
-	{
-		write(2, "Error: wrong map objects quantity\n", 34);
-		exit (EXIT_FAILURE);
-	}
+		ft_free_map_error(game, "Error: wrong map objects quantity\n");
 	ft_check_if_possible(game, game->player_y, game->player_x);
 }
 
@@ -110,12 +110,8 @@ void	ft_check_if_possible(t_game *game, int i, int j)
 {
 	char	**map_copy;
 
-
 	if (game->height <= 0 || game->width <= 0)
-	{
-		write(2, "Error: invalid map dimensions.\n", 32);
-		exit(EXIT_FAILURE);
-	}
+		ft_free_map_error(game, "Error: invalid map dimensions.\n");
 	map_copy = NULL;
 	ft_malloc_and_copy_map(game, &map_copy);
 	ft_iter_checker(map_copy, game, i, j);

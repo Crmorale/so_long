@@ -6,7 +6,7 @@
 /*   By: crmorale <crmorale@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 14:57:01 by crmorale          #+#    #+#             */
-/*   Updated: 2024/11/27 20:22:30 by crmorale         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:37:53 by crmorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,27 @@ void	ft_free_map_and_texts(t_game *game)
 		mlx_delete_texture(game->text_wall);
 }
 
-void	ft_load_error(t_game *game, char *message)
+void	ft_free_map_error(t_game *game, char *msg)
+{
+	int	i;
+	int	msg_len;
+
+	i = 0;
+	if (game->map == NULL)
+		return ;
+	while (game->map && game->map[i])
+		free(game->map[i++]);
+	free(game->map);
+	game->map = NULL;
+	msg_len = ft_strlen(msg);
+	write(2, msg, msg_len);
+	exit(EXIT_FAILURE);
+}
+void	ft_load_error(t_game *game, char *msg)
 {
 	int	msg_len;
 
-	msg_len = ft_strlen(message);
+	msg_len = ft_strlen(msg);
 	if (game->png_player)
 		mlx_delete_image(game->mlx, game->png_player);
 	if (game->png_collect)
@@ -87,8 +103,8 @@ void	ft_load_error(t_game *game, char *message)
 	if (game->png_exit)
 		mlx_delete_image(game->mlx, game->png_exit);
 	ft_free_map_and_texts(game);
-	write(2, message, msg_len);
-	exit(1);
+	write(2, msg, msg_len);
+	exit(EXIT_FAILURE);
 }
 
 int	main(int argc, char **argv)

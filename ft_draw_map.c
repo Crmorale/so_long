@@ -6,7 +6,7 @@
 /*   By: crmorale <crmorale@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 20:08:14 by crmorale          #+#    #+#             */
-/*   Updated: 2024/11/27 20:18:29 by crmorale         ###   ########.fr       */
+/*   Updated: 2024/11/28 18:27:45 by crmorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,19 @@ void	ft_create_images(t_game *game)
 {
 	game->png_player = mlx_texture_to_image(game->mlx, game->text_player);
 	if (!game->png_player)
-		write(2, "Error: Failed to create player image.\n", 37);
+		ft_load_error(game, "Error: Failed to create player image.\n");
 	game->png_collect = mlx_texture_to_image(game->mlx, game->text_collect);
 	if (!game->png_collect)
-		write(2, "Error: Failed to create collect image.\n", 38);
+		ft_load_error(game, "Error: Failed to create player image.\n");
 	game->png_wall = mlx_texture_to_image(game->mlx, game->text_wall);
 	if (!game->png_wall)
-		write(2, "Error: Failed to create image of wall.\n", 38);
+		ft_load_error(game, "Error: Failed to create wall image.\n");
 	game->png_path = mlx_texture_to_image(game->mlx, game->text_path);
 	if (!game->png_path)
-		write(2, "Error: Failed to create path image.\n", 35);
+		ft_load_error(game, "Error: Failed to create path image.\n");
 	game->png_exit = mlx_texture_to_image(game->mlx, game->text_exit);
 	if (!game->png_exit)
-		write(2, "Error: Failed to create exit image.\n", 35);
+		ft_load_error(game, "Error: Failed to create exit image.\n");
 }
 
 void	ft_load_set1_images(t_game *game)
